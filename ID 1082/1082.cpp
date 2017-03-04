@@ -8,9 +8,10 @@
  * Case Time Limit:1000m
  * Memory Limit:256MB
  * Description
- * 14184646038225.jpg
  * 
- * fjxmlhx is fed up with endless marshtomps on the internet. So he turns to you to write a program to change all occurrence of “marshtomp” ( the name is not case-sensitive)  to “fjxmlhx”.
+ * fjxmlhx is fed up with endless marshtomps on the internet. 
+ * So he turns to you to write a program to change all occurrence of “marshtomp” 
+ * (the name is not case-sensitive)  to “fjxmlhx”.
  * 
  * Input
  * The input contains multiple lines.
@@ -93,10 +94,15 @@ int Match(const char *str1, const char *str2)
 			j = 0;
 		}
 	}
+
 	if (j >= strlen(str2))
+	{
 		return(i - strlen(str2));
+	}
 	else
+	{
 		return (-1);
+	}
 }
 
 // 函数从字符串str的begin_sub下标开始将length长度的部分替换成str_replaceing
@@ -114,6 +120,7 @@ void Replace(char *str, const char *str_replaceing,
 	{
 		str_after[i] = str[i + begin_sub + length];
 	}
+
 	str_after[strlen(str) - begin_sub - length + 1] = '\0';
 	strcat(str_before, str_replaceing);
 	strcat(str_before, str_after);
