@@ -53,11 +53,13 @@
  * 5 4
  */
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <cstring>
 #include <cstdlib>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <set>
+#include <iterator>
+#include <algorithm>
 using namespace std;
 
 // 自定义矩阵类
@@ -109,7 +111,7 @@ public:
 	vector<char> Convert(string str)
 	{
 		vector<char> result;
-		for (int i = 0; i < str.length(); i++)
+		for (size_t i = 0; i < str.length(); i++)
 		{
 			result.push_back(str[i]);
 		}
@@ -126,7 +128,7 @@ public:
 	void Load()
 	{
 		string line;
-		for (int i = 0; i < GetRow(); i++)
+		for (size_t i = 0; i < GetRow(); i++)
 		{
 			cin >> line;
 			vector<char> line_vect = Convert(line);
@@ -139,6 +141,9 @@ public:
 		Matrix result;
 		switch (flag)
 		{
+		case 0:
+			return (*this);
+			break;
 		case 1:
 			result.Resize(GetCol(), GetRow());
 			for (size_t i = 0; i < result.GetRow(); i++)
@@ -189,9 +194,9 @@ public:
 
 		// 如果在边界内则设置子矩阵大小并对子矩阵赋值
 		sub_matrix.Resize(sub_row, sub_col);
-		for (int i = 0; i < sub_row; i++)
+		for (size_t i = 0; i < sub_row; i++)
 		{
-			for (int j = 0; j < sub_col; j++)
+			for (size_t j = 0; j < sub_col; j++)
 			{
 				sub_matrix.data[i][j] = data[begin_row + i][begin_col + j];
 			}
@@ -211,9 +216,9 @@ public:
 			return false;
 		}
 
-		for (int i = 0; i < big_row; i++)
+		for (size_t i = 0; i < big_row; i++)
 		{
-			for (int j = 0; j < big_col; j++)
+			for (size_t j = 0; j < big_col; j++)
 			{
 				if (data[i][j] != mat[i][j])
 					return false;
@@ -223,8 +228,9 @@ public:
 	}
 };
 
-void Match(Matrix mat_map, Matrix mat_sur)
+set< pair<size_t, size_t> > Match(Matrix mat_map, Matrix mat_sur)
 {
+	set< pair<size_t, size_t> > location;
 	for (size_t i = 0; i <= mat_map.GetRow() - 3; i++)
 	{
 		for (size_t j = 0; j <= mat_map.GetCol() - 3; j++)
@@ -232,10 +238,11 @@ void Match(Matrix mat_map, Matrix mat_sur)
 			Matrix sub_mat = mat_map.GetSubMatrix(i, j, 3, 3);
 			if (sub_mat.IsSame(mat_sur))
 			{
-				cout << i + 2 << " " << j + 2 << endl;
+				location.insert(pair<size_t, size_t>(i + 2, j + 2));
 			}
 		}
 	}
+	return location;
 }
 
 int main()
@@ -249,13 +256,20 @@ int main()
 	Matrix mat_sur(3, 3);		// 周围环境矩阵
 	mat_sur.Load();
 
-	Match(mat_map, mat_sur);
-	for (int i = 1; i <= 3; i++)
+	set< pair<size_t, size_t> > result;
+	set< pair<size_t, size_t> > temp;
+	
+	for (int i = 0; i <= 3; i++)
 	{
-		Match(mat_map, mat_sur.Rotate(i));
+		temp = Match(mat_map, mat_sur.Rotate(i));
+		set_union(result.begin(), result.end(), temp.begin(), temp.end(),
+			insert_iterator< set< pair<size_t, size_t> > >(result, result.begin()));
+	}
+
+	for (auto x : result)
+	{
+		cout << x.first << " " << x.second << endl;
 	}
 
 	return 0;
 }
-
-
