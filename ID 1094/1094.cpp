@@ -245,6 +245,16 @@ set< pair<size_t, size_t> > Match(Matrix mat_map, Matrix mat_sur)
 	return location;
 }
 
+bool operator<(const pair<size_t, size_t> &p1, const pair<size_t, size_t> &p2)
+{
+	if (p1.second < p1.second)
+		return true;
+	else if (p1.second == p2.second && p1.first < p2.first)
+		return true;
+	else
+		return false;
+}
+
 int main()
 {
 	size_t N, M;
